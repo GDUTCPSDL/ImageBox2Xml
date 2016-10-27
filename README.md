@@ -24,10 +24,12 @@ python及pip的安装（http://www.tuicool.com/articles/eiM3Er3/）
 4. 将图片文件放入JPEGImages中
 
 # 生成Labels下的txt文件
-1. 命令行进入 D:/example，输入 python label.py
-![images](https://raw.githubusercontent.com/curiosity-hyf/ImageBox2Xml/master/imagetmp/cmd1.jpg)
 
-（如果出现 no module name cv2 错误，将opencv安装目录下的 build/python/x64/cv2.pyd (如果是32位机则选 x86/cv2.pyd) 放到python安装目录下的 Lib/site-packages/ 中）
+1. 命令行进入 D:/example，输入 python label.py
+
+        ![images](https://raw.githubusercontent.com/curiosity-hyf/ImageBox2Xml/master/imagetmp/cmd1.jpg)
+
+        （如果出现 no module name cv2 错误，将opencv安装目录下的 build/python/x64/cv2.pyd (如果是32位机则选 x86/cv2.pyd) 放到python安装目录下的 Lib/site-packages/ 中）
 
 2. 点击Load
  
