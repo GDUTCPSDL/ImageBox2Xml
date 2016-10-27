@@ -1,7 +1,7 @@
 # ImageBox2Xml
 # 环境
 - 配置python 2.7、pip 及opencv3.0 环境
-python及pip的安装（http://www.tuicool.com/articles/eiM3Er3/）
+python及pip的安装（http://www.tuicool.com/articles/eiM3Er3 )
 
 - 命令行窗口输入 pip install image numpy
 
