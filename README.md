@@ -7,6 +7,7 @@ python及pip的安装（http://www.tuicool.com/articles/eiM3Er3/）
 2、命令行窗口输入 pip install image numpy
 
 3、创建如下目录结构
+```
 ----某一目录（以D:/example/为例，下同）
         |
         -----Annotations #用于保存Xml
@@ -18,7 +19,7 @@ python及pip的安装（http://www.tuicool.com/articles/eiM3Er3/）
           ---createXml.py
           |
           ---label.py
-
+```
 
 4、将图片文件放入JPEGImages中
 二、生成Labels下的txt文件
