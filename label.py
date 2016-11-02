@@ -23,7 +23,7 @@ SIZE = 256, 256
 IMAGEPATH = 'JPEGImages'
 LABELPATH = 'Labels'
 
-classLabels=['plate']
+classLabels=['bentian', 'benchi', 'plate']
 
 class LabelTool():
     def __init__(self, master):
@@ -73,11 +73,16 @@ class LabelTool():
         self.mainPanel.bind("<Button-1>", self.mouseClick)
         self.mainPanel.bind("<Motion>", self.mouseMove)
         self.parent.bind("<Escape>", self.cancelBBox)  # press <Esc> to cancel current bbox
-        self.parent.bind("s", self.cancelBBox)
-        self.parent.bind("a", self.prevImage) # press 'a' to go backforward
-        self.parent.bind("d", self.nextImage) # press 'd' to go forward
         self.mainPanel.grid(row = 1, column = 0, rowspan = 4, columnspan = 2, sticky = W+N)
 
+
+
+        #self.scrl = Scrollbar(self.frame, orient=HORIZONTAL)
+        #self.scrl.pack(side=RIGHT, fill=Y)
+        #self.mainPanel.configure(yscrollcommand = self.scrl.set)
+        #self.mainPanel.pack(side=LEFT, expand=True, fill=BOTH)
+        #self.scrl['command'] = self.mainPanel.yview
+		
         # showing bbox info & delete bbox
         self.lb1 = Label(self.frame, text = 'Bounding boxes:')
         self.lb1.grid(row = 1, column = 2,  sticky = W+N)
@@ -158,9 +163,11 @@ class LabelTool():
             data.close()
             
         # default to the 1st image in the collection
-        print '%d images loaded from %s' %(self.total, IMAGEPATH)
+        
         self.cur = 0
         self.total = len(self.imageList)
+
+        print '%d images loaded from %s' %(self.total, IMAGEPATH)
         self.loadImage()
 
     def loadImage(self):
@@ -169,7 +176,8 @@ class LabelTool():
         self.img = Image.open(imagepath) #图片文件
         self.imgSize = self.img.size #图片尺寸
         self.tkimg = ImageTk.PhotoImage(self.img) #加载图片
-        self.mainPanel.config(width = self.tkimg.width(), height = self.tkimg.height()) #修改画布尺寸
+        #self.mainPanel.config(width = self.tkimg.width(), height = self.tkimg.height()) #修改画布尺寸
+        self.mainPanel.config(width = self.tkimg.width(), height = self.tkimg.height())
         self.mainPanel.create_image(0, 0, image = self.tkimg, anchor=NW) #填充画布
         self.progLabel.config(text = "%04d/%04d" %(self.cur + 1, self.total)) #修改进度值
 
@@ -185,16 +193,17 @@ class LabelTool():
                     if i == 0:
                         bbox_cnt = int(line.strip()) #获取标签数量
                         continue
-                    tmp = [int(t.strip()) for t in line.split()] #获取当前标签坐标
 
+                    tmp = [(t) for t in line.split()] #获取当前标签坐标
+                	
                     self.bboxList.append(tuple(tmp)) #记录坐标列表
                     #绘制矩形框
-                    tmpId = self.mainPanel.create_rectangle(tmp[0], tmp[1], \
-                                                            tmp[2], tmp[3], \
+                    tmpId = self.mainPanel.create_rectangle(int(tmp[1]), int(tmp[2]), \
+                                                            int(tmp[3]), int(tmp[4]), \
                                                             width = 2, \
                                                             outline = COLORS[(len(self.bboxList)-1) % len(COLORS)])
                     self.bboxIdList.append(tmpId)
-                    self.listbox.insert(END, '(%d, %d) -> (%d, %d)' %(tmp[0], tmp[1], tmp[2], tmp[3]))
+                    self.listbox.insert(END, '%s: (%d, %d) -> (%d, %d)' %(tmp[0], int(tmp[1]), int(tmp[2]), int(tmp[3]), int(tmp[4])))
                     self.listbox.itemconfig(len(self.bboxIdList) - 1, fg = COLORS[(len(self.bboxIdList) - 1) % len(COLORS)])
 
     def saveImage(self):
@@ -220,7 +229,7 @@ class LabelTool():
             self.bboxList.append((self.currentClass, x1, y1, x2, y2))
             self.bboxIdList.append(self.bboxId)
             self.bboxId = None
-            self.listbox.insert(END, '(%d, %d) -> (%d, %d)' %(x1, y1, x2, y2))
+            self.listbox.insert(END, '%s: (%d, %d) -> (%d, %d)' %(self.currentClass, x1, y1, x2, y2))
             self.listbox.itemconfig(len(self.bboxIdList) - 1, fg = COLORS[(len(self.bboxIdList) - 1) % len(COLORS)])
         self.STATE['click'] = 1 - self.STATE['click']
 
@@ -270,8 +279,19 @@ class LabelTool():
         self.classbox.delete(0,END)
         self.classbox.insert(0, 'plate')
         self.classbox.itemconfig(0,fg = COLORS[0])
-     
 
+    def selectbentian(self):
+        self.currentClass = 'bentian'
+        self.classbox.delete(0,END)
+        self.classbox.insert(0, 'bentian')
+        self.classbox.itemconfig(0,fg = COLORS[0])
+
+    def selectbenchi(self):
+        self.currentClass = 'benchi'
+        self.classbox.delete(0,END)
+        self.classbox.insert(0, 'benchi')
+        self.classbox.itemconfig(0,fg = COLORS[0])
+     
     def prevImage(self, event = None):
         self.saveImage()
         if self.cur > 0:
